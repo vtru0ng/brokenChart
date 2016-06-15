@@ -42,6 +42,15 @@ class BrokenChart {
         return col;
     };
 
+    static isPointInRect(point,rect) {
+        return (point.x > rect.x && point.x < (rect.x + rect.width) && point.y > rect.y && point.y < (rect.y + rect.height));
+
+    };
+
+    static getDistance(x1,x2,y1,y2) {
+        return Math.sqrt( (x2-=x1)*x2 + (y2-=y1)*y2 );
+    };
+
 }
 
 export {BrokenChart};

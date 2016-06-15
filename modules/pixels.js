@@ -5,8 +5,7 @@
 
 import _ from 'underscore';
 import {Cache} from './cache';
-import * as d3  from '../node_modules/d3'
-import $ from 'jquery';
+import {BrokenChart} from './brokenChart';
 
 class Pixels {
     constructor() {
@@ -80,7 +79,7 @@ class Pixels {
                 r++
             }
 
-            let pixelGrid = { x: startX, y: startY, gridSize: { w: width, h: height},size: size, id: null, cells: cells, grid: grid};
+            let pixelGrid = { x: startX, y: startY, gridSize: { w: width, h: height},size: size, cells:cells, grid:grid};
 
             // Cache the data using the FS API.
             if(_options.cache) {
@@ -149,6 +148,32 @@ class Pixels {
         } );
 
     }
+
+    static generateSubGrid(rect, data) {
+        let cells = data.cells;
+        let subCells = _.filter(cells, (obj) => {
+            let point = {x: obj.x, y: obj.y};
+            return  BrokenChart.isPointInRect(point, rect);
+        });
+
+        let sortedCells = _.sortBy(subCells, (cell) => {return cell.row}),
+            grids = [],
+            row = sortedCells[0].row,
+            rows = [];
+
+        for(var i = 0; i < sortedCells.length; i++) {
+            let cell = sortedCells[i];
+            if(cell.row > row) {
+                grids.push(rows);
+                row = cell.row;
+                rows = [];
+            }
+
+            rows.push(cell);
+        }
+
+        return {x:rect.x, y:rect.y, gridSize:{w:rect.width, h:rect.height}, size: data.size, cells:subCells, grid:grids}
+    };
 }
 
 export {Pixels};

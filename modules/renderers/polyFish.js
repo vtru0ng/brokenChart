@@ -7,6 +7,7 @@ import $ from 'jquery';
 import {Pixels} from '../pixels';
 import {RendererBase} from './rendererBase';
 import {BrokenChart} from '../brokenChart';
+import PerlinNoise from '../libs/perlin-noise';
 
 class PolyFish extends RendererBase {
     constructor(controller) {
@@ -35,7 +36,7 @@ class PolyFish extends RendererBase {
 
     _render(data) {
 
-        // Prepare data for the Voronoi Link design.
+        // Prepare data for the Voronoi Link effect.
         var rectCenter = {x: data.x + ((data.gridSize.w/2)), y: data.y + ((data.gridSize.h/2))};
 
         let randomX = d3.randomNormal(rectCenter.x, 80),
@@ -60,26 +61,27 @@ class PolyFish extends RendererBase {
             .attr('width', data.gridSize.w)
             .attr('height', data.gridSize.h);
 
-        this._layer1(cells);
-        this._layer2(cells);
 
+        this._layer1(cells);
+        this._layer3(data);
+        this._layer2(cells);
     }
 
+    // Voronoi effect.
     _layer1(cells) {
         // D3 Voronoi layer
         let lineFunction = d3.line()
             .x(function(d) { return d.x; })
             .y(function(d) { return d.y; });
 
-        let colors = d3.scaleCategory20();
-
-        var trianglevoronoi =  d3.voronoi()
+        let colors = d3.schemeCategory20b;
+        let trianglevoronoi =  d3.voronoi()
             .x(function(d) { return d.x; })
             .y(function(d) { return d.y; });
 
-        var triangleData = trianglevoronoi.triangles(cells);
+        let triangleData = trianglevoronoi.triangles(cells);
 
-        var triangles = this.controller.svg.append('g')
+        let triangles = this.controller.svg.append('g')
             .attr('class', 'renderer-group')
             .append('g')
             .selectAll('path');
@@ -102,19 +104,19 @@ class PolyFish extends RendererBase {
             }).attr('stroke-width',function(d) {
                 return 1 })
             .attr('stroke',function(d) {
-                return colors( Math.min(Math.round(Math.random() * 20), 19));
+                return colors[ Math.min(Math.round(Math.random() * 20), 19)];
             });
-
     }
 
+    // Dots effect.
     _layer2(cells) {
 
-        var svg = this.controller.svg;
+        let svg = this.controller.svg;
 
-   svg.append('g').attr('id', 'xxx')
-                .attr('class', 'renderer-group');
+        let group = svg.append('g')
+            .attr('class', 'renderer-group');
 
-        svg.selectAll('circle')
+        group.selectAll('circle')
             .data(cells)
             .enter()
             .append('circle')
@@ -129,9 +131,51 @@ class PolyFish extends RendererBase {
                 return d.y;
             })
             .style('fill', function(d) {
-                   return d3.rgb(d.imageData.data[0], d.imageData.data[1], d.imageData.data[2]);
+                return d3.rgb(d.imageData.data[0], d.imageData.data[1], d.imageData.data[2]);
 
             });
+    }
+
+    // Add some details.
+    _layer3(data) {
+        let rect = {width:150, height:150, x:50, y:140};
+        let subGrid = Pixels.generateSubGrid({width:250, height:150, x:40, y:140}, data),
+            center = {x: rect.x + (rect.width/2), y: rect.y + (rect.height/2)},
+            svg = this.controller.svg;
+
+        let bringInDaNoise = new PerlinNoise(.003);
+
+        svg.append('g')
+            .attr('class', 'renderer-group symbols')
+            .append('g')
+            .selectAll('path')
+            .data(subGrid.cells)
+            .enter()
+            .append('path')
+            .attr("transform", function(d) {
+                var x =   d.x + (d.size/2)  ;
+                var y = d.y + (d.size/2);
+                return"translate(" + x + ", " + y + ")"
+            })
+            .style('fill-opacity',
+                function(d) {
+                    let distance = BrokenChart.getDistance(d.x,d.y,center.x,center.y);
+                    let opacity = 65/distance;
+                    opacity = (opacity > .8) ? 1 : (opacity < 0) ? 0: opacity;
+
+                    return opacity;
+                })
+            .style('fill',function(d) {
+                return d3.rgb(d.imageData.data[0], d.imageData.data[1], d.imageData.data[2])})
+            .attr('d', d3.symbol()
+                .size(function(d) {
+
+                    return  (6 * bringInDaNoise(d.x,d.row));
+                })
+                .type(function(d) {
+                    return d3.symbolStar
+                })
+            );
     }
 
     static size() {
