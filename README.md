@@ -5,7 +5,7 @@ Broken Chart is a small experimental library created to aid me in making generat
 
 modules/renderers/polyFish.js
 
- ![]({{site.baseurl}}/Sample.png)
+ ![](https://raw.githubusercontent.com/vtru0ng/brokenChart/master/Sample.png)
  
 ##Environment
 - NodeJS
