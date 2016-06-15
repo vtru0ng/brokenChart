@@ -13,5 +13,6 @@ grunt default
 
 Build: grunt build
 
- 
-[Demo - Generative Paintings Created with Broken Chart ](https://society6.com/vutronic)
+[Demo] - Coming soon...
+
+[Samples - Generative Paintings Created with Broken Chart ](https://society6.com/vutronic)
