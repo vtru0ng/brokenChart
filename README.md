@@ -1,6 +1,13 @@
-# Broken Chart
+#Broken Chart
 Broken Chart is a small experimental library created to aid me in making generative paintings using D3 v4.
-## Environment
+
+##Sample
+
+modules/renderers/polyFish.js
+
+ ![]({{site.baseurl}}/Sample.png)
+ 
+##Environment
 - NodeJS
 - NPM
 - Grunt
@@ -16,4 +23,4 @@ Manual build: grunt build
 
 [Demo] - Coming soon...
 
-[Samples - Generative Paintings Created with Broken Chart ](https://society6.com/vutronic)
+[More Samples - Generative Paintings Created with Broken Chart ](https://society6.com/vutronic)
