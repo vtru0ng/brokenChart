@@ -8,10 +8,11 @@ Broken Chart is a small experimental library created to aid me in making generat
 - Chrome
 
 ##Installation
-Build and watch for code changes:
-grunt default 
+Load the module dependencies: npm install
 
-Build: grunt build
+Build and watch for code changes: grunt default 
+
+Manual build: grunt build
 
 [Demo] - Coming soon...
 
