@@ -1,0 +1,14 @@
+{
+  "name": "brokenchart",
+  "main": "dist/module.js",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "babelify": "^6.1.0",
+    "grunt-browserify": "^3.8.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "systemjs": "0.19.27",
+    "d3": "^4.0.0-alpha.44",
+    "jquery": "^2.1.1",
+    "underscore": "^1.8.3"
+  }
+}

@@ -1,2 +1,2 @@
 # brokenChart
-Generative art using D3
+Generative art with d3
