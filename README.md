@@ -1,6 +1,6 @@
 # Broken Chart
 Broken Chart is a small experimental library created to aid me in making generative paintings using D3 v4.
-## Environment Dependencies
+## Environment
 - NodeJS
 - NPM
 - Grunt
