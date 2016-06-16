@@ -25,13 +25,14 @@ $(document).ready(function() {
             () => { alert('Cache removed!'); }
         );
     });
-
     
     $render.on('click', function () {
         $loader.css('display', 'block');
         $svgContainer.empty();
+
         let controller = new BrokenChart(PolyFish.size());
         let renderer = new PolyFish(controller);
+
         controller.render([renderer.run()]).then(() => {
             $loader.css('display', 'none');
             $clear.hide();

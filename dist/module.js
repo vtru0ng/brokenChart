@@ -71,7 +71,7 @@ var BrokenChart = (function () {
 
 exports.BrokenChart = BrokenChart;
 
-},{"../node_modules/d3":9,"underscore":11}],2:[function(require,module,exports){
+},{"../node_modules/d3":8,"underscore":10}],2:[function(require,module,exports){
 /**
  * Created by vutruong on 6/2/16.
  * Cache an image grid using HTML5 File System.
@@ -99,7 +99,6 @@ var Cache = (function () {
 		_classCallCheck(this, Cache);
 
 		this.filer = new _libsFilerFiler2['default']();
-
 		this.initiated = false;
 	}
 
@@ -247,7 +246,7 @@ var Cache = (function () {
 
 exports.Cache = Cache;
 
-},{"./libs/filer/filer":4,"underscore":11}],3:[function(require,module,exports){
+},{"./libs/filer/filer":4,"underscore":10}],3:[function(require,module,exports){
 /**
  * Created by vutruong on 6/2/16.
  */
@@ -287,8 +286,10 @@ _jquery2['default'](document).ready(function () {
     $render.on('click', function () {
         $loader.css('display', 'block');
         $svgContainer.empty();
+
         var controller = new _brokenChart.BrokenChart(_renderersPolyFish.PolyFish.size());
         var renderer = new _renderersPolyFish.PolyFish(controller);
+
         controller.render([renderer.run()]).then(function () {
             $loader.css('display', 'none');
             $clear.hide();
@@ -297,7 +298,7 @@ _jquery2['default'](document).ready(function () {
     });
 });
 
-},{"./brokenChart":1,"./cache":2,"./renderers/polyFish":7,"jquery":10}],4:[function(require,module,exports){
+},{"./brokenChart":1,"./cache":2,"./renderers/polyFish":6,"jquery":9}],4:[function(require,module,exports){
 /** 
  * Copyright 2013 - Eric Bidelman
  * 
@@ -1130,102 +1131,6 @@ if (typeof exports !== 'undefined') {
 
 },{}],5:[function(require,module,exports){
 /**
- * Adapted from Kes Thomas' JavaScript Perlin noise code at
- * http://asserttrue.blogspot.ca/2011/12/perlin-noise-in-javascript_31.html
- **/
-
-// This is a port of Ken Perlin's Java code. The
-// original Java code is at http://cs.nyu.edu/%7Eperlin/noise/.
-// Note that in this version, a number from 0 to 1 is returned.
-
-'use strict';
-
-var permutation = [151, 160, 137, 91, 90, 15, 131, 13, 201, 95, 96, 53, 194, 233, 7, 225, 140, 36, 103, 30, 69, 142, 8, 99, 37, 240, 21, 10, 23, 190, 6, 148, 247, 120, 234, 75, 0, 26, 197, 62, 94, 252, 219, 203, 117, 35, 11, 32, 57, 177, 33, 88, 237, 149, 56, 87, 174, 20, 125, 136, 171, 168, 68, 175, 74, 165, 71, 134, 139, 48, 27, 166, 77, 146, 158, 231, 83, 111, 229, 122, 60, 211, 133, 230, 220, 105, 92, 41, 55, 46, 245, 40, 244, 102, 143, 54, 65, 25, 63, 161, 1, 216, 80, 73, 209, 76, 132, 187, 208, 89, 18, 169, 200, 196, 135, 130, 116, 188, 159, 86, 164, 100, 109, 198, 173, 186, 3, 64, 52, 217, 226, 250, 124, 123, 5, 202, 38, 147, 118, 126, 255, 82, 85, 212, 207, 206, 59, 227, 47, 16, 58, 17, 182, 189, 28, 42, 223, 183, 170, 213, 119, 248, 152, 2, 44, 154, 163, 70, 221, 153, 101, 155, 167, 43, 172, 9, 129, 22, 39, 253, 19, 98, 108, 110, 79, 113, 224, 232, 178, 185, 112, 104, 218, 246, 97, 228, 251, 34, 242, 193, 238, 210, 144, 12, 191, 179, 162, 241, 81, 51, 145, 235, 249, 14, 239, 107, 49, 192, 214, 31, 181, 199, 106, 157, 184, 84, 204, 176, 115, 121, 50, 45, 127, 4, 150, 254, 138, 236, 205, 93, 222, 114, 67, 29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 180];
-
-function scalenum(n) {
-    return (1 + n) / 2;
-}
-
-function grad(hash, x, y, z) {
-    var h = hash & 15,
-        // convert lo 4 bits of hash code
-    u = h < 8 ? x : y,
-        // into 12 gradient directions
-    v = h < 4 ? y : h == 12 || h == 14 ? x : z;
-    return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
-}
-
-function fade(t) {
-    return t * t * t * (t * (t * 6 - 15) + 10);
-}
-
-// linear interpolation between a and b by amount t (0, 1)
-function lerp(t, a, b) {
-    return a + t * (b - a);
-}
-
-var noise = function noise(scale) {
-    // build the perm array
-    var p = new Array(512);
-    for (var i = 0; i < 256; i++) {
-        p[256 + i] = p[i] = permutation[i];
-    }
-
-    return function (x, y, z) {
-
-        if (!z) z = 0;
-
-        x *= scale;
-        y *= scale;
-        z *= scale;
-
-        // find unit cube that contains this point
-        var X = Math.floor(x) & 255,
-            Y = Math.floor(y) & 255,
-            Z = Math.floor(z) & 255;
-
-        // find relative x, y, z of point in cube
-        x -= Math.floor(x);
-        y -= Math.floor(y);
-        z -= Math.floor(z);
-
-        // compute the face curves for each of X, Y, Z
-        var u = fade(x),
-            v = fade(y),
-            w = fade(z);
-
-        // hash coordinates of the 8 cube corners
-        var A = p[X] + Y,
-            AA = p[A] + Z,
-            AB = p[A + 1] + Z,
-            B = p[X + 1] + Y,
-            BA = p[B] + Z,
-            BB = p[B + 1] + Z;
-
-        var lo = lerp(v, lerp(u, grad(p[AA], x, y, z), grad(p[BA], x - 1, y, z)), lerp(u, grad(p[AB], x, y - 1, z), grad(p[BB], x - 1, y - 1, z)));
-
-        var hi = lerp(v, lerp(u, grad(p[AA + 1], x, y, z - 1), grad(p[BA + 1], x - 1, y, z - 1)), lerp(u, grad(p[AB + 1], x, y - 1, z - 1), grad(p[BB + 1], x - 1, y - 1, z - 1)));
-
-        // add blended results from 8 corners of cube
-        return scalenum(lerp(w, lo, hi));
-    };
-};
-
-// Modified by VT for ES6 Module support.
-var PerlinNoise = function PerlinNoise(scale) {
-    return noise(scale);
-};
-
-// For CommonJS
-if (typeof exports !== 'undefined') {
-    if (typeof module !== 'undefined' && module.exports) {
-        module.exports = PerlinNoise;
-    }
-    exports.PerlinNoise = PerlinNoise;
-}
-
-},{}],6:[function(require,module,exports){
-/**
  * Created by vutruong on 6/2/16.
  * Load an image and extract the pixel data based on a specific cell size.
  */
@@ -1424,7 +1329,7 @@ var Pixels = (function () {
 
 exports.Pixels = Pixels;
 
-},{"./brokenChart":1,"./cache":2,"underscore":11}],7:[function(require,module,exports){
+},{"./brokenChart":1,"./cache":2,"underscore":10}],6:[function(require,module,exports){
 /**
  * Created by vutruong on 6/4/16.
  */
@@ -1432,8 +1337,6 @@ exports.Pixels = Pixels;
 'use strict';
 
 exports.__esModule = true;
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
@@ -1445,19 +1348,11 @@ var _node_modulesD3 = require('../../node_modules/d3');
 
 var d3 = _interopRequireWildcard(_node_modulesD3);
 
-var _jquery = require('jquery');
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
 var _pixels = require('../pixels');
 
 var _rendererBase = require('./rendererBase');
 
 var _brokenChart = require('../brokenChart');
-
-var _libsPerlinNoise = require('../libs/perlin-noise');
-
-var _libsPerlinNoise2 = _interopRequireDefault(_libsPerlinNoise);
 
 var PolyFish = (function (_RendererBase) {
     _inherits(PolyFish, _RendererBase);
@@ -1553,7 +1448,7 @@ var PolyFish = (function (_RendererBase) {
         });
     };
 
-    // Dots effect.
+    // Dot effect.
 
     PolyFish.prototype._layer2 = function _layer2(cells) {
 
@@ -1572,33 +1467,25 @@ var PolyFish = (function (_RendererBase) {
         });
     };
 
-    // Add some details.
+    // Add more details.
 
     PolyFish.prototype._layer3 = function _layer3(data) {
-        var rect = { width: 150, height: 150, x: 50, y: 140 };
-        var subGrid = _pixels.Pixels.generateSubGrid({ width: 250, height: 150, x: 40, y: 140 }, data),
-            center = { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 },
+        var rect = { width: 200, height: 130, x: 60, y: 130 };
+        var subGrid = _pixels.Pixels.generateSubGrid({ width: rect.width, height: rect.height, x: rect.x, y: rect.y }, data),
             svg = this.controller.svg;
 
-        var bringInDaNoise = new _libsPerlinNoise2['default'](.003);
-
         svg.append('g').attr('class', 'renderer-group symbols').append('g').selectAll('path').data(subGrid.cells).enter().append('path').attr("transform", function (d) {
-            var x = d.x + d.size / 2;
-            var y = d.y + d.size / 2;
+            var x = d.x + d.size / 2,
+                y = d.y + d.size / 2;
             return "translate(" + x + ", " + y + ")";
         }).style('fill-opacity', function (d) {
-            var distance = _brokenChart.BrokenChart.getDistance(d.x, d.y, center.x, center.y);
-            var opacity = 65 / distance;
-            opacity = opacity > .8 ? 1 : opacity < 0 ? 0 : opacity;
-
-            return opacity;
+            return 1 - (d.x - rect.x) / rect.width;
         }).style('fill', function (d) {
             return d3.rgb(d.imageData.data[0], d.imageData.data[1], d.imageData.data[2]);
         }).attr('d', d3.symbol().size(function (d) {
-
-            return 6 * bringInDaNoise(d.x, d.row);
+            return 4;
         }).type(function (d) {
-            return d3.symbolStar;
+            return d3.symbolDiamond;
         }));
     };
 
@@ -1611,7 +1498,7 @@ var PolyFish = (function (_RendererBase) {
 
 exports.PolyFish = PolyFish;
 
-},{"../../node_modules/d3":9,"../brokenChart":1,"../libs/perlin-noise":5,"../pixels":6,"./rendererBase":8,"jquery":10}],8:[function(require,module,exports){
+},{"../../node_modules/d3":8,"../brokenChart":1,"../pixels":5,"./rendererBase":7}],7:[function(require,module,exports){
 /**
  * Created by vutruong on 6/6/16.
  */
@@ -1629,20 +1516,20 @@ var _jquery = require('jquery');
 var _jquery2 = _interopRequireDefault(_jquery);
 
 var RendererBase = (function () {
-  function RendererBase() {
-    _classCallCheck(this, RendererBase);
-  }
+    function RendererBase() {
+        _classCallCheck(this, RendererBase);
+    }
 
-  RendererBase.prototype.init = function init() {};
+    RendererBase.prototype.init = function init() {};
 
-  RendererBase.prototype.run = function run() {};
+    RendererBase.prototype.run = function run() {};
 
-  return RendererBase;
+    return RendererBase;
 })();
 
 exports.RendererBase = RendererBase;
 
-},{"jquery":10}],9:[function(require,module,exports){
+},{"jquery":9}],8:[function(require,module,exports){
 // https://d3js.org Version 4.0.0-alpha.49. Copyright 2016 Mike Bostock.
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
@@ -14866,7 +14753,7 @@ exports.RendererBase = RendererBase;
   Object.defineProperty(exports, '__esModule', { value: true });
 
 }));
-},{}],10:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.2.4
  * http://jquery.com/
@@ -24682,7 +24569,7 @@ if ( !noGlobal ) {
 return jQuery;
 }));
 
-},{}],11:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 //     Underscore.js 1.8.3
 //     http://underscorejs.org
 //     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors

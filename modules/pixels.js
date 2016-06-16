@@ -55,7 +55,7 @@ class Pixels {
 
             while(r < totalRows) {
                 let c = 0;
-                var rows = [];
+                let rows = [];
                 grid[r] = rows;
 
                 while(c < totalCols) {
@@ -87,7 +87,6 @@ class Pixels {
             }
 
             return pixelGrid ;
-
         };
 
         if(!this.cache.initiated && _options.cache) {
@@ -113,11 +112,9 @@ class Pixels {
                 let grid = reBuild();
                 resolve(grid);
             }
-
         };
 
         return new Promise(excecutor);
-
     }
 
     loadImage(imagePath) {

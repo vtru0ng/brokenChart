@@ -3,11 +3,10 @@
  */
 
 import * as d3  from '../../node_modules/d3'
-import $ from 'jquery';
 import {Pixels} from '../pixels';
 import {RendererBase} from './rendererBase';
 import {BrokenChart} from '../brokenChart';
-import PerlinNoise from '../libs/perlin-noise';
+
 
 class PolyFish extends RendererBase {
     constructor(controller) {
@@ -108,7 +107,7 @@ class PolyFish extends RendererBase {
             });
     }
 
-    // Dots effect.
+    // Dot effect.
     _layer2(cells) {
 
         let svg = this.controller.svg;
@@ -136,14 +135,11 @@ class PolyFish extends RendererBase {
             });
     }
 
-    // Add some details.
+    // Add more details.
     _layer3(data) {
-        let rect = {width:150, height:150, x:50, y:140};
-        let subGrid = Pixels.generateSubGrid({width:250, height:150, x:40, y:140}, data),
-            center = {x: rect.x + (rect.width/2), y: rect.y + (rect.height/2)},
+        let rect = {width: 200, height: 130, x: 60, y: 130};
+        let subGrid = Pixels.generateSubGrid({width:rect.width, height:rect.height, x:rect.x, y:rect.y}, data),
             svg = this.controller.svg;
-
-        let bringInDaNoise = new PerlinNoise(.003);
 
         svg.append('g')
             .attr('class', 'renderer-group symbols')
@@ -153,27 +149,21 @@ class PolyFish extends RendererBase {
             .enter()
             .append('path')
             .attr("transform", function(d) {
-                var x =   d.x + (d.size/2)  ;
-                var y = d.y + (d.size/2);
+                let x =   d.x + (d.size/2),
+                    y = d.y + (d.size/2);
                 return"translate(" + x + ", " + y + ")"
             })
-            .style('fill-opacity',
-                function(d) {
-                    let distance = BrokenChart.getDistance(d.x,d.y,center.x,center.y);
-                    let opacity = 65/distance;
-                    opacity = (opacity > .8) ? 1 : (opacity < 0) ? 0: opacity;
-
-                    return opacity;
-                })
+            .style('fill-opacity',function(d) {
+                return 1 - ((d.x - rect.x) / rect.width);
+            })
             .style('fill',function(d) {
                 return d3.rgb(d.imageData.data[0], d.imageData.data[1], d.imageData.data[2])})
             .attr('d', d3.symbol()
                 .size(function(d) {
-
-                    return  (6 * bringInDaNoise(d.x,d.row));
+                    return 4;
                 })
                 .type(function(d) {
-                    return d3.symbolStar
+                    return d3.symbolDiamond
                 })
             );
     }

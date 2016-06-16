@@ -4,11 +4,11 @@
  */
 import Filer from './libs/filer/filer';
 import _ from 'underscore';
+
 const CACHE_DIRECTORY = 'jsons';
 class Cache {
 	constructor() {
 		this.filer = new Filer();
-
 		this.initiated = false;
 	}
 

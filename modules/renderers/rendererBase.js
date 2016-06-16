@@ -7,15 +7,12 @@ import $ from 'jquery';
 class RendererBase {
     
     constructor() {
-
     }
 
     init() {
-
     }
 
     run() {
-   
     }
 
 }
