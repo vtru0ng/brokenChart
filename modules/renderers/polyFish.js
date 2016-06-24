@@ -18,7 +18,7 @@ class PolyFish extends RendererBase {
 
     run() {
 
-        let excecutor = (resolve, reject) => {
+        let executor = (resolve, reject) => {
             Promise.all([this.pixels.initCache(),  this.pixels.loadImage('images/blueFish.jpeg')])
                 .then(() => {
                     return this.pixels.generate({x:0, y:0, size: 2, w:552, h:394});
@@ -30,7 +30,7 @@ class PolyFish extends RendererBase {
                     (e) => reject(e));
         };
 
-        return new Promise(excecutor);
+        return new Promise(executor);
     }
 
     _render(data) {

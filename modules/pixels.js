@@ -16,7 +16,7 @@ class Pixels {
 
     initCache() {
 
-        let excecutor = (resolve, reject) => {
+        let executor = (resolve, reject) => {
 
             this.cache.init().then(
                 (data) => {resolve(this)},
@@ -24,7 +24,7 @@ class Pixels {
             );
         };
 
-        return new Promise(excecutor);
+        return new Promise(executor);
     }
 
     // Get the pixel data from cache or rebuild from the loaded image.
@@ -94,7 +94,7 @@ class Pixels {
             return;
         }
 
-        let excecutor = (resolve, reject) => {
+        let executor = (resolve, reject) => {
             if(_options.cache) {
                 let fileName = Cache.generateNameByCellSize(_options.size);
                 this.cache.findFile(fileName).then(
@@ -114,7 +114,7 @@ class Pixels {
             }
         };
 
-        return new Promise(excecutor);
+        return new Promise(executor);
     }
 
     loadImage(imagePath) {
